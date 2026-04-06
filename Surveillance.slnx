@@ -1,0 +1,38 @@
+<Solution>
+  <Folder Name="/BuildingBlocks/">
+    <Project Path="BuildingBlocks/Surveillance.EventBus/Surveillance.EventBus.csproj" />
+    <Project Path="BuildingBlocks/Surveillance.Logging/Surveillance.Logging.csproj" />
+    <Project Path="BuildingBlocks/Surveillance.Saga/Surveillance.Saga.csproj" Id="3fc08608-8f6c-4e7b-8ede-cda87429ee05" />
+    <Project Path="BuildingBlocks/Surveillance.SharedKernel/Surveillance.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/Gateway/">
+    <Project Path="Gateway/Surveillance.ApiGateway/Surveillance.ApiGateway.csproj" />
+  </Folder>
+  <Folder Name="/Infrastructure/" />
+  <Folder Name="/Infrastructure/docker/">
+    <File Path="observability.yml" />
+    <File Path="prometheus.yml" />
+  </Folder>
+  <Folder Name="/Infrastructure/k8s/" />
+  <Folder Name="/Infrastructure/terraform/" />
+  <Folder Name="/Services/" />
+  <Folder Name="/Services/Alert/">
+    <Project Path="Services/Alert/Surveillance.Alert.Api/Surveillance.Alert.Api.csproj" Id="55a54836-1961-4e81-9ad5-18e3b529af1b" />
+    <Project Path="Services/Alert/Surveillance.Alert.Application/Surveillance.Alert.Application.csproj" Id="56232519-a337-417f-bef0-c9214daa12dc" />
+    <Project Path="Services/Alert/Surveillance.Alert.Domain/Surveillance.Alert.Domain.csproj" Id="dbc4ba12-b8d9-420c-82a1-315ce952ef52" />
+    <Project Path="Services/Alert/Surveillance.Alert.Infrastructure/Surveillance.Alert.Infrastructure.csproj" Id="3a1a9c7b-9d9f-40c8-a05a-a21df1460f1c" />
+  </Folder>
+  <Folder Name="/Services/Identity/">
+    <Project Path="Services/Identity/Surveillance.Identity.Api/Surveillance.Identity.Api.csproj" Id="19982b3f-1ec4-4e92-b6a2-b7a1debdd094" />
+    <Project Path="Services/Identity/Surveillance.Identity.Application/Surveillance.Identity.Application.csproj" Id="0ddb1e1a-222e-43ec-ac75-a6787a0461e6" />
+    <Project Path="Services/Identity/Surveillance.Identity.Domain/Surveillance.Identity.Domain.csproj" Id="31ab765d-d228-429a-b6a1-7667cb833b1a" />
+    <Project Path="Services/Identity/Surveillance.Identity.Infrastructure/Surveillance.Identity.Infrastructure.csproj" Id="3e22d9c7-38c9-45cc-b945-06274f368b31" />
+  </Folder>
+  <Folder Name="/Services/Notification/">
+    <Project Path="Services/Notification/Surveillance.Notification.Api/Surveillance.Notification.Api.csproj" Id="832cff86-efd7-47ea-b870-2b55d0555691" />
+    <Project Path="Services/Notification/Surveillance.Notification.Application/Surveillance.Notification.Application.csproj" Id="14bca55a-747b-4a2b-85e6-0750feb9cce4" />
+    <Project Path="Services/Notification/Surveillance.Notification.Domain/Surveillance.Notification.Domain.csproj" Id="a0d98906-6417-4434-ba22-090fbc15bbde" />
+    <Project Path="Services/Notification/Surveillance.Notification.Infrastructure/Surveillance.Notification.Infrastructure.csproj" Id="350871dc-e827-4db2-9cc7-e757e214bfea" />
+  </Folder>
+  <Folder Name="/Tests/" />
+</Solution>

@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.5" />
+    <PackageReference Include="Polly" Version="8.6.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Surveillance.EventBus\Surveillance.EventBus.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Surveillance.Logging\Surveillance.Logging.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Surveillance.Saga\Surveillance.Saga.csproj" />
+    <ProjectReference Include="..\Surveillance.Alert.Domain\Surveillance.Alert.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Surveillance.EventBus\Surveillance.EventBus.csproj" />
+    <ProjectReference Include="..\Surveillance.Notification.Domain\Surveillance.Notification.Domain.csproj" />
+    <ProjectReference Include="..\Surveillance.Notification.Infrastructure\Surveillance.Notification.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
