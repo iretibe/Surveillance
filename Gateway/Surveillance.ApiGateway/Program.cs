@@ -1,4 +1,5 @@
 using AspNetCoreRateLimit;
+using Surveillance.ApiGateway.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,10 +28,12 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
 
 var app = builder.Build();
 
-app.MapGet("/dashboard", async (HttpClient client) =>
+app.MapGet("/dashboard", async (IHttpClientFactory factory) =>
 {
-    var alerts = await client.GetFromJsonAsync("/alerts");
-    var users = await client.GetFromJsonAsync("/users");
+    var client = factory.CreateClient();
+
+    var alerts = await client.GetFromJsonAsync<List<AlertDto>>("http://alert-api/alerts");
+    var users = await client.GetFromJsonAsync<List<UserDto>>("http://identity-api/users");
 
     return new { alerts, users };
 });
