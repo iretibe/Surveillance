@@ -20,24 +20,25 @@ namespace Surveillance.Alert.Infrastructure.Repositories
 
         public async Task DeleteAsync(Guid id)
         {
-            var alert = await _context.Alerts.SingleOrDefaultAsync(alert => alert.Id == id);
-
-            _context.Alerts.Remove(alert!);
+            var alert = await _context.Alerts.FirstOrDefaultAsync(a => a.Id == id);
+            if (alert != null)
+                _context.Alerts.Remove(alert);
         }
 
-        public Task<IEnumerable<Domain.Entities.Alert>> GetAllAsync()
+        public async Task<IEnumerable<Domain.Entities.Alert>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Alerts.ToListAsync();
         }
 
-        public Task<Domain.Entities.Alert?> GetByIdAsync(Guid id)
+        public async Task<Domain.Entities.Alert?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Alerts.FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public Task UpdateAsync(Domain.Entities.Alert alert)
         {
-            throw new NotImplementedException();
+            _context.Alerts.Update(alert);
+            return Task.CompletedTask;
         }
     }
 }

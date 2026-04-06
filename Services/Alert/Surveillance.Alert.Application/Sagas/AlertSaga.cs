@@ -1,11 +1,12 @@
-﻿using Surveillance.Alert.Application.Commands;
+﻿using System.Diagnostics;
+using MediatR;
+using Surveillance.Alert.Application.Commands;
 using Surveillance.Alert.Domain.Events;
 using Surveillance.Alert.Domain.Saga;
 using Surveillance.Alert.Infrastructure.Data;
 using Surveillance.EventBus.Events;
 using Surveillance.EventBus.Events.Notifications;
 using Surveillance.Saga;
-using System.Diagnostics;
 
 namespace Surveillance.Alert.Application.Sagas
 {
@@ -13,29 +14,26 @@ namespace Surveillance.Alert.Application.Sagas
     {
         private readonly IEventBus _bus;
         private readonly AlertDbContext _db;
-
+        private readonly IMediator _mediator;
         private static readonly ActivitySource ActivitySource = new("Saga");
 
-        public AlertSaga(IEventBus bus, AlertDbContext db)
+        public AlertSaga(IEventBus bus, AlertDbContext db, IMediator mediator)
         {
             _bus = bus;
             _db = db;
+            _mediator = mediator;
         }
 
-        public async Task HandleAsync(object @event, CancellationToken ct)
+        public async Task HandleAsync(object @event, CancellationToken ct = default)
         {
             using var activity = ActivitySource.StartActivity("Saga.Handle");
             activity?.SetTag("event.type", @event.GetType().Name);
 
             switch (@event)
             {
-                //case AlertCreatedEvent e:
-                //    await StartSaga(e, ct);
-                //    break;
-
                 case AlertCreatedEvent e:
-                    activity?.SetTag("alert.id", e.Id);
-                    await HandleAlertCreated(e);
+                    activity?.SetTag("alert.id", e.Id.ToString());
+                    await StartSaga(e, ct);
                     break;
 
                 case NotificationFailedEvent e:
@@ -44,17 +42,14 @@ namespace Surveillance.Alert.Application.Sagas
             }
         }
 
-        private async Task HandleAlertCreated(AlertCreatedEvent e)
-        {
-            throw new NotImplementedException();
-        }
-
         private async Task StartSaga(AlertCreatedEvent e, CancellationToken ct)
         {
             var saga = new SagaStateEntity
             {
                 Id = e.Id,
                 CurrentStep = "Notification",
+                IsCompleted = false,
+                IsFailed = false
             };
 
             _db.SagaStates.Add(saga);
@@ -65,12 +60,14 @@ namespace Surveillance.Alert.Application.Sagas
 
         private async Task Compensate(NotificationFailedEvent e, CancellationToken ct)
         {
-            var saga = await _db.SagaStates.FindAsync(e.AlertId);
+            var saga = await _db.SagaStates.FindAsync(new object[] { e.AlertId }, ct);
+            if (saga != null)
+            {
+                saga.IsFailed = true;
+                saga.CurrentStep = "Compensated";
+            }
 
-            saga!.IsFailed = true;
-
-            await _bus.PublishAsync(new DeleteAlertCommand(e.AlertId));
-
+            await _mediator.Send(new DeleteAlertCommand(e.AlertId), ct);
             await _db.SaveChangesAsync(ct);
         }
     }
