@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -81,6 +82,11 @@ app.Use(async (context, next) =>
     LogContext.PushProperty("CorrelationId", correlationId);
 
     await next();
+});
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    AllowCachingResponses = false
 });
 
 // Prometheus
