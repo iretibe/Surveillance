@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -6,6 +7,7 @@ using Serilog.Context;
 using Serilog.Sinks.Grafana.Loki;
 using Surveillance.Alert.Application;
 using Surveillance.Alert.Infrastructure;
+using Surveillance.Alert.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +55,12 @@ builder.Services.AddOpenTelemetry()
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AlertDbContext>();
+    db.Database.Migrate();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

@@ -19,7 +19,15 @@ namespace Surveillance.Alert.Infrastructure
             IConfiguration configuration)
         {
             services.AddDbContext<AlertDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("Default")));
+                options.UseSqlServer(
+                    configuration.GetConnectionString("DefaultConnection"),
+                    sql =>
+                    {
+                        sql.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(10),
+                            errorNumbersToAdd: null);
+                    }));
 
             services.AddScoped<IAlertRepository, AlertRepository>();
 

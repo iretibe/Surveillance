@@ -1,0 +1,9 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
+  surveillance.alert.api:
+    image: ${DOCKER_REGISTRY-}surveillancealertapi
+    build:
+      context: .
+      dockerfile: Services/Alert/Surveillance.Alert.Api/Dockerfile

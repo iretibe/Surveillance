@@ -35,4 +35,7 @@
     <Project Path="Services/Notification/Surveillance.Notification.Infrastructure/Surveillance.Notification.Infrastructure.csproj" Id="350871dc-e827-4db2-9cc7-e757e214bfea" />
   </Folder>
   <Folder Name="/Tests/" />
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>
