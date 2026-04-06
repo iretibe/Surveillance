@@ -7,3 +7,15 @@ services:
     build:
       context: .
       dockerfile: Services/Alert/Surveillance.Alert.Api/Dockerfile
+
+  surveillance.identity.api:
+    image: ${DOCKER_REGISTRY-}surveillanceidentityapi
+    build:
+      context: .
+      dockerfile: Services/Identity/Surveillance.Identity.Api/Dockerfile
+
+  surveillance.notification.api:
+    image: ${DOCKER_REGISTRY-}surveillancenotificationapi
+    build:
+      context: .
+      dockerfile: Services/Notification/Surveillance.Notification.Api/Dockerfile
