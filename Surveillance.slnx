@@ -9,11 +9,13 @@
     <Project Path="Gateway/Surveillance.ApiGateway/Surveillance.ApiGateway.csproj" />
   </Folder>
   <Folder Name="/Infrastructure/" />
-  <Folder Name="/Infrastructure/docker/">
-    <File Path="observability.yml" />
-    <File Path="prometheus.yml" />
-  </Folder>
   <Folder Name="/Infrastructure/k8s/" />
+  <Folder Name="/Infrastructure/Observability/">
+    <File Path="grafana-dashboards.yml" />
+    <File Path="grafana-datasources.yml" />
+    <File Path="prometheus.yml" />
+    <File Path="tempo.yml" />
+  </Folder>
   <Folder Name="/Infrastructure/terraform/" />
   <Folder Name="/Services/" />
   <Folder Name="/Services/Alert/">

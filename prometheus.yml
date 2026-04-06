@@ -1,7 +1,17 @@
 global:
-  scrape_interval: 5s
+  scrape_interval: 15s
+  evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'alert-service'
+  - job_name: 'aspnetcore'
+    scrape_interval: 5s
     static_configs:
-      - targets: ['surveillance.alert.api:8080']
+      - targets:
+          - 'surveillance.alert.api:8080'
+          - 'surveillance.identity.api:8080'
+          - 'surveillance.notification.api:8080'
+    metrics_path: '/metrics'
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
