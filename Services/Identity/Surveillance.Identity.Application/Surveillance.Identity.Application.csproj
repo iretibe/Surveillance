@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Surveillance.SharedKernel\Surveillance.SharedKernel.csproj" />
     <ProjectReference Include="..\Surveillance.Identity.Domain\Surveillance.Identity.Domain.csproj" />
     <ProjectReference Include="..\Surveillance.Identity.Infrastructure\Surveillance.Identity.Infrastructure.csproj" />
   </ItemGroup>

@@ -25,7 +25,7 @@ services:
     image: rabbitmq:3-management
     ports:
       - "5673:5672"   # app connection
-      - "15672:15672" # UI
+      - "15673:15672" # UI
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -59,7 +59,7 @@ services:
     container_name: tempo
     command: ["-config.file=/etc/tempo.yaml"]
     volumes:
-      - ./observability/tempo.yaml:/etc/tempo.yaml
+      - ./Infrastructure/Observability/tempo.yaml:/etc/tempo.yaml
       - tempo_data:/tmp/tempo
     ports:
       - "3200:3200"  # tempo
@@ -89,7 +89,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./Infrastructure/Observability/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     networks:
       - surveillance-network
@@ -103,9 +103,9 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_INSTALL_PLUGINS=grafana-piechart-panel
     volumes:
-      - ./observability/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
-      - ./observability/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
-      - ./observability/dashboards:/var/lib/grafana/dashboards
+      - ./Infrastructure/Observability/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./Infrastructure/Observability/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
+      - ./Infrastructure/Observability/dashboards:/var/lib/grafana/dashboards
       - grafana_data:/var/lib/grafana
     depends_on:
       - prometheus
@@ -127,6 +127,9 @@ services:
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=Surveillance_DB;User Id=sa;Password=Admin@2025!;TrustServerCertificate=True;
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
+      - Jwt__Secret=${JWT_SECRET}
+      - Jwt__Issuer=surveillance-identity
+      - Jwt__Audience=surveillance-api
     ports:
       - "8001:8080"
     depends_on:
@@ -151,7 +154,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      - ConnectionStrings__Default=Server=sqlserver,1433;Database=Surveillance_DB;User Id=sa;Password=Admin@2025!;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=Surveillance_DB;User Id=sa;Password=Admin@2025!;TrustServerCertificate=True;
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
+      - Jwt__Secret=${JWT_SECRET}
+      - Jwt__Issuer=surveillance-identity
+      - Jwt__Audience=surveillance-api
     ports:
       - "8002:8080"
     depends_on:
@@ -170,7 +177,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      - ConnectionStrings__Default=Server=sqlserver,1433;Database=Surveillance_DB;User Id=sa;Password=Admin@2025!;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=Surveillance_DB;User Id=sa;Password=Admin@2025!;TrustServerCertificate=True;
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
+      - Jwt__Secret=${JWT_SECRET}
+      - Jwt__Issuer=surveillance-identity
+      - Jwt__Audience=surveillance-api
     ports:
       - "8003:8080"
     depends_on:

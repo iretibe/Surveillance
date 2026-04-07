@@ -21,7 +21,7 @@ namespace Surveillance.Alert.Application.Commands.Handlers
 
         public async Task<Guid> Handle(CreateAlertCommand request, CancellationToken ct)
         {
-            var alert = Domain.Entities.Alert.Create(request.Message);
+            var alert = Domain.Entities.Alert.Create(request.Message, request.UserId);
 
             await _repo.AddAsync(alert);
             await _uow.SaveChangesAsync(ct);

@@ -46,6 +46,9 @@ namespace Surveillance.Alert.Infrastructure.Data
             {
                 e.HasKey(x => x.Id);
                 e.Property(x => x.Message).IsRequired();
+                e.Property(x => x.UserId).IsRequired();
+                e.HasIndex(x => x.UserId);
+                e.HasIndex(x => x.CreatedAt);
             });
 
             base.OnModelCreating(builder);

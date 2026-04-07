@@ -2,5 +2,5 @@
 
 namespace Surveillance.Alert.Application.Commands
 {
-    public record CreateAlertCommand(string Message) : IRequest<Guid>;
+    public record CreateAlertCommand(string Message, Guid UserId) : IRequest<Guid>;
 }
