@@ -20,8 +20,8 @@ builder.Host.UseSerilog();
 
 // Add YARP Reverse Proxy
 builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
-    .AddTransforms<CustomTransformer>();
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+    //.AddTransforms<CustomTransformer>();
 
 // JWT Bearer Authentication
 builder.Services.AddAuthentication("Bearer").AddJwtBearer();
@@ -45,16 +45,16 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
     };
 });
 
-// Add CORS
-builder.Services.AddCorsPolicy(builder.Configuration);
+//// Add CORS
+//builder.Services.AddCorsPolicy(builder.Configuration);
 
-// Add health checks
-builder.Services.AddHealthChecks()
-    .AddUrlGroup(new Uri("http://alert-api:8080/health"), "Alert API")
-    .AddUrlGroup(new Uri("http://identity-api:8080/health"), "Identity API")
-    .AddUrlGroup(new Uri("http://notification-api:8080/health"), "Notification API")
-    .AddRedis(builder.Configuration["Redis:ConnectionString"] ?? "redis:6379")
-    .AddRabbitMQ(builder.Configuration["RabbitMQ:ConnectionString"] ?? "amqp://guest:guest@rabbitmq:5672");
+//// Add health checks
+//builder.Services.AddHealthChecks()
+//    .AddUrlGroup(new Uri("http://alert-api:8080/health"), "Alert API")
+//    .AddUrlGroup(new Uri("http://identity-api:8080/health"), "Identity API")
+//    .AddUrlGroup(new Uri("http://notification-api:8080/health"), "Notification API")
+//    .AddRedis(builder.Configuration["Redis:ConnectionString"] ?? "redis:6379")
+//    .AddRabbitMQ(builder.Configuration["RabbitMQ:ConnectionString"] ?? "amqp://guest:guest@rabbitmq:5672");
 
 // Add OpenTelemetry
 builder.Services.AddOpenTelemetry()
@@ -70,25 +70,25 @@ builder.Services.AddOpenTelemetry()
             });
     });
 
-// Add HTTP client resilience
-builder.Services.AddHttpClient()
-    .AddStandardResilienceHandler(options =>
-    {
-        options.Retry.MaxRetryAttempts = 3;
-        options.Retry.Delay = TimeSpan.FromSeconds(2);
-        options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(30);
-    });
+//// Add HTTP client resilience
+//builder.Services.AddHttpClient()
+//    .AddStandardResilienceHandler(options =>
+//    {
+//        options.Retry.MaxRetryAttempts = 3;
+//        options.Retry.Delay = TimeSpan.FromSeconds(2);
+//        options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(30);
+//    });
 
 var app = builder.Build();
 
-app.MapGet("/dashboard", async (IHttpClientFactory factory) =>
-{
-    var client = factory.CreateClient();
+//app.MapGet("/dashboard", async (IHttpClientFactory factory) =>
+//{
+//    var client = factory.CreateClient();
 
-    var alerts = await client.GetFromJsonAsync<List<AlertDto>>("http://alert-api/alerts");
-    var users = await client.GetFromJsonAsync<List<UserDto>>("http://identity-api/users");
+//    var alerts = await client.GetFromJsonAsync<List<AlertDto>>("http://alert-api/alerts");
+//    var users = await client.GetFromJsonAsync<List<UserDto>>("http://identity-api/users");
 
-    return new { alerts, users };
-});
+//    return new { alerts, users };
+//});
 
 app.Run();

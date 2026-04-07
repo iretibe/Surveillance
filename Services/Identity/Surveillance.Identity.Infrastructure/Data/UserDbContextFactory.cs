@@ -9,7 +9,7 @@ namespace Surveillance.Identity.Infrastructure.Data
         {
             var optionsBuilder = new DbContextOptionsBuilder<UserDbContext>();
 
-            optionsBuilder.UseSqlServer("Server=localhost,1433;Database=Surveillance_DB;User Id=sa;Password=Admin@2025!;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=localhost,1434;Database=Surveillance_DB;User Id=sa;Password=Somad@2026$;TrustServerCertificate=True;");
 
             return new UserDbContext(optionsBuilder.Options);
         }
