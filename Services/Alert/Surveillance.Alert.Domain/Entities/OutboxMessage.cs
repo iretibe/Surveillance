@@ -7,5 +7,8 @@
         public string Payload { get; set; } = string.Empty;
         public DateTime OccurredOn { get; set; }
         public DateTime? ProcessedOn { get; set; }
+        public string? Error { get; set; }
+        public int? RetryCount { get; set; }
+        public bool IsDeadLetter { get; set; }
     }
 }

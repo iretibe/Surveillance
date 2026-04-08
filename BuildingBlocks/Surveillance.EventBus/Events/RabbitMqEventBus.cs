@@ -17,7 +17,7 @@ namespace Surveillance.EventBus.Events
             _logger = logger;
         }
 
-        public async Task PublishAsync<T>(T @event)
+        public async Task PublishAsync<T>(T @event, CancellationToken cancellationToken)
         {
             var factory = new ConnectionFactory()
             {

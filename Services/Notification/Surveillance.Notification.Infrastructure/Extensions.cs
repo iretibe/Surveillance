@@ -14,7 +14,7 @@ namespace Surveillance.Notification.Infrastructure
             IConfiguration configuration)
         {
             services.AddDbContext<NotificationDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("Default")));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<INotificationRepository, NotificationRepository>();
             
