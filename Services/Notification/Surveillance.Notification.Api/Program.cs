@@ -8,6 +8,7 @@ using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Context;
 using Serilog.Sinks.Grafana.Loki;
+using Surveillance.EventBus.Events;
 using Surveillance.Notification.Application;
 using Surveillance.Notification.Infrastructure;
 using Surveillance.Notification.Infrastructure.Data;
@@ -74,6 +75,8 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<JwtTokenGenerator>();
 
+builder.Services.AddScoped<IEventBus, RabbitMqEventBus>();
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -82,7 +85,8 @@ builder.Services.AddOpenTelemetry()
     .WithTracing(tracing =>
     {
         tracing
-            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("identity-service"))
+            .SetResourceBuilder(ResourceBuilder.CreateDefault()
+            .AddService("notification-service"))
             .AddAspNetCoreInstrumentation()
             .AddHttpClientInstrumentation()
             .AddEntityFrameworkCoreInstrumentation()
@@ -98,6 +102,9 @@ builder.Services.AddOpenTelemetry()
             .AddRuntimeInstrumentation()
             .AddPrometheusExporter();
     });
+
+// Add health checks services
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 

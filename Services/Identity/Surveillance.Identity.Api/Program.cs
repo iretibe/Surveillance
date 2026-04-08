@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Metrics;
@@ -10,6 +11,7 @@ using Serilog.Context;
 using Serilog.Sinks.Grafana.Loki;
 using Surveillance.Identity.Api.Helpers;
 using Surveillance.Identity.Application;
+using Surveillance.Identity.Domain.Entities;
 using Surveillance.Identity.Infrastructure;
 using Surveillance.Identity.Infrastructure.Data;
 using Surveillance.SharedKernel.Security;
@@ -26,6 +28,23 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog();
+
+// Add Identity services
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+{
+    // Configure Identity options
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+
+    options.User.RequireUniqueEmail = true;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+})
+.AddEntityFrameworkStores<UserDbContext>()
+.AddDefaultTokenProviders();
 
 // JWT Configuration
 var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
@@ -105,6 +124,9 @@ builder.Services.AddOpenTelemetry()
             .AddRuntimeInstrumentation()
             .AddPrometheusExporter();
     });
+
+// Add health checks services
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 

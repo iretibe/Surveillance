@@ -78,6 +78,9 @@ builder.Services.AddOpenTelemetry()
             .AddPrometheusExporter();
     });
 
+// Add health checks services
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Surveillance.Alert.Application.Commands.Handlers;
+using Surveillance.Alert.Application.Sagas;
+using Surveillance.Saga;
 
 namespace Surveillance.Alert.Application
 {
@@ -10,6 +12,9 @@ namespace Surveillance.Alert.Application
             // Command handler registration
             services
                 .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateAlertCommandHandler>());
+
+            services.AddScoped<SagaDispatcher>();
+            services.AddScoped<ISaga, AlertSaga>();
 
             return services;
         }

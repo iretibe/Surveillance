@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -11,17 +12,17 @@ namespace Surveillance.Notification.Application.BackgroundJob
 {
     public class RabbitConsumer : BackgroundService
     {
-        private readonly NotificationEventHandler _handler;
+        private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<RabbitConsumer> _logger;
 
         private IConnection? _connection;
         private IChannel? _channel;
 
         public RabbitConsumer(
-            NotificationEventHandler handler,
+            IServiceScopeFactory scopeFactory,
             ILogger<RabbitConsumer> logger)
         {
-            _handler = handler;
+            _scopeFactory = scopeFactory;
             _logger = logger;
         }
 
@@ -39,7 +40,7 @@ namespace Surveillance.Notification.Application.BackgroundJob
 
             var consumer = new AsyncEventingBasicConsumer(_channel);
 
-            consumer.ReceivedAsync += HandleMessageAsync; 
+            consumer.ReceivedAsync += HandleMessageAsync;
 
             await _channel.BasicConsumeAsync("alerts", true, consumer);
 
@@ -48,19 +49,35 @@ namespace Surveillance.Notification.Application.BackgroundJob
 
         private async Task HandleMessageAsync(object sender, BasicDeliverEventArgs ea)
         {
-            var body = ea.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
-
-            try
+            // Create a scope for each message to resolve scoped services
+            using (var scope = _scopeFactory.CreateScope())
             {
-                var command = JsonSerializer.Deserialize<SendNotificationCommand>(message);
+                var handler = scope.ServiceProvider.GetRequiredService<NotificationEventHandler>();
 
-                await _handler.Handle(command!);
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+
+                try
+                {
+                    var command = JsonSerializer.Deserialize<SendNotificationCommand>(message);
+                    await handler.Handle(command!);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error processing message");
+                }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing message");
-            }
+        }
+
+        public override async Task StopAsync(CancellationToken cancellationToken)
+        {
+            if (_channel != null)
+                await _channel.CloseAsync();
+
+            if (_connection != null)
+                await _connection.CloseAsync();
+
+            await base.StopAsync(cancellationToken);
         }
     }
 }
